@@ -22,7 +22,7 @@ export class BookService {
         return await this.bookModel.findById(id).exec();
     }
 
-    async deleteById(id: string): Promise<Book> {
+    async deleteById(id: string) {
         const condition = { _id: id };
         return await this.bookModel.remove(condition);
     }
