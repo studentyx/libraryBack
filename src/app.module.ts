@@ -1,8 +1,15 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 
+const USER_BD = 'library';
+const PASSWORD_BD = 'library';
+const MONGODB_URI = `mongodb://${USER_BD}:${PASSWORD_BD}@ds123770.mlab.com:23770/library`;
+
 @Module({
-  imports: [],
+  imports: [
+    MongooseModule.forRoot(MONGODB_URI),
+  ],
   controllers: [AppController],
   components: [],
 })
