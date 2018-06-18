@@ -1,9 +1,6 @@
 import { expect } from 'chai';
 import request = require('supertest');
 
-
-var chai = require('chai');
-
 const port: string = '3000';
 const peticion = request.agent('http://localhost:' + port);
 var id = '';
