@@ -9,7 +9,7 @@
     "start:dev": "nodemon",
     "prestart:prod": "rm -rf dist && tsc",
     "start:prod": "node dist/main.js",
-    "test": "jasmine JASMINE_CONFIG_PATH=./test/support/jasmine.json",
+    "test": "./node_modules/.bin/mocha --reporter spec",
     "test:karma": "karma start"
   },
   "dependencies": {
