@@ -10,7 +10,5 @@ const MONGODB_URI = `mongodb://${USER_BD}:${PASSWORD_BD}@ds123770.mlab.com:23770
   imports: [
     MongooseModule.forRoot(MONGODB_URI),
   ],
-  controllers: [AppController],
-  components: [],
 })
 export class AppModule {}
