@@ -6,7 +6,6 @@ import { User } from './user.interface';
 @Controller(UserController.URL)
 export class UserController {
     static URL: string = 'users';
-    static LOGIN: string = 'login';
     static USERNAME: string = ':username';
 
     constructor(private readonly userService: UserService) {}
