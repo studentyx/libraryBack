@@ -2,18 +2,19 @@ import { Controller, Get, Post, Body, Param, Delete, Patch, Put, Headers, Query 
 import { ReviewDto } from './review.dto';
 import { Review } from './review.interface';
 import { ReviewService } from './review.service';
-import {AuthService} from 'auth/auth.service';
+import { AuthService } from 'auth/auth.service';
 
 @Controller(ReviewController.URL)
 export class ReviewController {
     static URL: string = 'reviews';
     static ID: string = ':id';
-    constructor(private readonly reviewService: ReviewService, private readonly authService: AuthService) {}
+    constructor(private readonly reviewService: ReviewService,
+    private readonly authService: AuthService) {}
     
     @Post()
     async create(@Headers() headers, @Body() reviewDto: ReviewDto): Promise<Review> {
         const token: string = headers.authorization;
-        const username: string = await this.authService.getUserValidatedFromToken(token);
+        const username: string = await this.authService.getPayloadFromToken(token).username;
         if (username) {
             return this.reviewService.create(reviewDto, username);
         } else {
