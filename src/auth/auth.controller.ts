@@ -8,7 +8,7 @@ export class AuthController {
     constructor(private readonly authService: AuthService, private readonly userService: UserService) { }
     @Post()
     async authenticate( @Body() userDto: UserDto): Promise<any> {
-        const exito: boolean = await this.authService.validateUser(userDto.username, userDto.password);
+        const exito: boolean = await this.authService.loginUser(userDto.username, userDto.password);
         let token = null;
         if (exito) {
             token = await this.authService.createToken(userDto.username);
