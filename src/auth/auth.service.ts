@@ -39,5 +39,18 @@ export class AuthService {
         }
     }
 
+    async getUserValidatedFromToken(token: string): Promise<string> {
+        let username: string = null;
+        jwt.verify(token, AuthService.secret, (err, decoded) => {
+            if (!err) {
+                let payload: JwtPayload = jwt.decode(token, AuthService.secret);
+                username = payload.username;
+            } else {
+                console.log('Error a la hora de verificar el token en "auth.service.ts".');
+            }
+        });
+        return username;
+    }
+
 }
 

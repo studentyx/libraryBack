@@ -33,6 +33,7 @@ export class UserService {
     if (userCount <= 0) {
       const saltRounds = 10;
       userDto.password = await bcrypt.hash( userDto.password, saltRounds );
+      userDto.rol = 'visitor';
       const user = new this.userModel(userDto);
       return await user.save();
     } else {

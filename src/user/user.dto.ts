@@ -3,5 +3,5 @@ export class UserDto {
     password: string;
     readonly email?: string;
     readonly avatar?: string;
-    readonly rol: string;
+    rol: string;
   }
