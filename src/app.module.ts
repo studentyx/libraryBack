@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { BookModule } from './book/book.module';
 import { UserModule } from 'user/user.module';
+import { AuthModule } from 'auth/auth.module';
 
 const USER_BD = 'library';
 const PASSWORD_BD = 'library';
@@ -13,6 +14,7 @@ const MONGODB_URI = `mongodb://${USER_BD}:${PASSWORD_BD}@ds123770.mlab.com:23770
       MongooseModule.forRoot(MONGODB_URI),
       BookModule,
       UserModule,
+      AuthModule,
   ],
 })
 export class AppModule {}
