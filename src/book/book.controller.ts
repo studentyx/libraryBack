@@ -13,7 +13,7 @@ export class BookController {
     constructor(private readonly bookService: BookService) { }
 
     @Post()
-    @Roles('admin')
+    @Roles('bookManager', 'admin')
     async create( @Headers() headers, @Body() bookDto: BookDto): Promise<Book> {
         return this.bookService.create(bookDto);
     }
@@ -29,11 +29,13 @@ export class BookController {
     }
 
     @Delete(BookController.ID)
+    @Roles('bookManager', 'admin')
     async delete( @Param() param) {
         return this.bookService.deleteById(param.id);
     }
 
     @Put(BookController.ID)
+    @Roles('visitor', 'bookManager', 'admin')
     async updateBook( @Param() param, @Body() bookDto: BookDto): Promise<Book> {
         return this.bookService.updateBook(param.id, bookDto);
     }
