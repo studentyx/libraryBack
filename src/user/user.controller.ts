@@ -1,9 +1,12 @@
-import { Controller, Get, Post, Body, Param, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, UseGuards, Headers } from '@nestjs/common';
 import { UserDto } from './user.dto';
 import { UserService } from './user.service';
 import { User } from './user.interface';
+import { RolesGuard } from 'common/guards/roles.guard';
+import { Roles } from 'common/decorators/roles.decorator';
 
 @Controller(UserController.URL)
+@UseGuards(RolesGuard)
 export class UserController {
     static URL: string = 'users';
     static USERNAME: string = ':username';
@@ -16,6 +19,7 @@ export class UserController {
     }
 
     @Get()
+    @Roles('admin')
     async findAll(): Promise<User[]> {
         return this.userService.findAll();
     }
@@ -26,8 +30,10 @@ export class UserController {
     }
 
     @Put(UserController.USERNAME)
-    async updateUser(@Param() param, @Body() userDto: UserDto): Promise<User> {
-        return this.userService.updateUser(param.username, userDto);
+    @Roles('visitor', 'bookManager', 'admin')
+    async updateUser(@Headers() headers, @Param() param, @Body() userDto: UserDto): Promise<User> {
+        const token: string = headers.authorization;
+        return this.userService.updateUser(token, param.username, userDto);
     }
 
 }
