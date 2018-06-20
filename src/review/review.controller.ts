@@ -33,14 +33,16 @@ export class ReviewController {
 
     @Delete(ReviewController.ID)
     @Roles('visitor', 'bookManager', 'admin')
-    async delete( @Param() param ){
-        return this.reviewService.deleteById( param.id );
+    async delete( @Headers() headers, @Param() param ){
+        const token: string = headers.authorization;
+        return this.reviewService.deleteById( token, param.id );
     }
 
     @Put(ReviewController.ID)
     @Roles('visitor', 'bookManager', 'admin')
-    async updateBook(@Param() param, @Body() reviewDto: ReviewDto): Promise<Review> {
-        return this.reviewService.updateReview(param.id, reviewDto);
+    async updateBook( @Headers() headers, @Param() param, @Body() reviewDto: ReviewDto): Promise<Review> {
+        const token: string = headers.authorization;
+        return this.reviewService.updateReview(token, param.id, reviewDto);
     }
 
 }
