@@ -54,9 +54,15 @@ export class UserService {
     return user;
   }
 
-  async updateUser(username: string, userDto: UserDto): Promise<User> {
-    const condition = { username: username };
-    return await this.userModel.update(condition, userDto);
+  async updateUser(token: string, username: string, userDto: UserDto): Promise<User> {
+
+    const userDB: User = await this.userModel.findOne({ username }).exec();
+    userDto.rol = userDB.rol;
+    userDto.password = await bcrypt.hash( userDto.password, 10 );
+    const user = new this.userModel(userDB);
+    return await user.update(userDto);
+
+
   }
 
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, UseGuards, Headers } from '@nestjs/common';
 import { UserDto } from './user.dto';
 import { UserService } from './user.service';
 import { User } from './user.interface';
@@ -30,8 +30,10 @@ export class UserController {
     }
 
     @Put(UserController.USERNAME)
-    async updateUser(@Param() param, @Body() userDto: UserDto): Promise<User> {
-        return this.userService.updateUser(param.username, userDto);
+    @Roles('visitor', 'bookManager', 'admin')
+    async updateUser(@Headers() headers, @Param() param, @Body() userDto: UserDto): Promise<User> {
+        const token: string = headers.authorization;
+        return this.userService.updateUser(token, param.username, userDto);
     }
 
 }
