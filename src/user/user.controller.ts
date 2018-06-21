@@ -5,6 +5,8 @@ import { User } from './user.interface';
 import { RolesGuard } from 'common/guards/roles.guard';
 import { Roles } from 'common/decorators/roles.decorator';
 
+import request = require('supertest');
+
 @Controller(UserController.URL)
 @UseGuards(RolesGuard)
 export class UserController {
@@ -14,8 +16,21 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Post()
-    async create(@Body() userDto: UserDto): Promise<User> {
-        return this.userService.create(userDto);
+    async create(@Headers() headers, @Body() userDto: UserDto, ): Promise<User> {
+        let recaptchaSecretKey: string = '6Lc4AGAUAAAAAGRuqNtoOV1QPZ48PaGwofl9Tizw';
+        let recaptchaUrl =  "https://www.google.com/recaptcha/api/siteverify?secret=" 
+        + recaptchaSecretKey
+        + "&response=" 
+        + headers.recaptcha;
+
+        const peticion = request.agent(recaptchaUrl);
+        peticion.post('')
+        .end((err, res) => {
+            if ( res.body.success === true ){
+                return this.userService.create(userDto);
+            }
+        });
+        return null;
     }
 
     @Get()
