@@ -1,11 +1,25 @@
 import * as mongoose from 'mongoose';
 
 export const BookSchema = new mongoose.Schema({
-    title: String,
-    image: String,
-    description: String,
-    genre: [String],
-    tags: [String],
-    author: String,
-    rating: Number,
+    title: {
+        type: String
+    },
+    image: {
+        type: String
+    },
+    description: {
+        type: String
+    },
+    genre: {
+        type: [String]
+    },
+    tags: {
+        type: [String]
+    },
+    author: {
+        type: String
+    },
+    rating: {
+        type: Number
+    },
 });

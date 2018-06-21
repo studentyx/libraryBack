@@ -10,9 +10,15 @@ async function bootstrap() {
   app.use(cors());
   app.use(helmet());
 
-  app.use(bodyParser.json())
-  app.use(bodyParser.urlencoded({extended:true}))
-  app.use(filter());
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({extended:true}));
+
+  let blackList = ['$','{','&&','||'];
+  let options = {
+      urlBlackList: blackList,
+      bodyBlackList: blackList
+  }
+  app.use(filter(options));
 
   const PORT = 3000;
   await app.listen(PORT, () => {
