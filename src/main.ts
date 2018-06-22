@@ -4,11 +4,13 @@ import cors = require('cors');
 import helmet = require( 'helmet' );
 import bodyParser = require( 'body-parser');
 import filter = require( 'content-filter' );
+import sqlinjection = require( 'sql-injection' );
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cors());
   app.use(helmet());
+  app.use(sqlinjection);
 
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended:true}));
