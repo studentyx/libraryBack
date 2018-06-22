@@ -37,6 +37,7 @@
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.2.1",
+    "sql-injection": "0.0.6",
     "typescript": "^2.9.2"
   },
   "devDependencies": {
@@ -46,7 +47,7 @@
     "@types/supertest": "^2.0.4",
     "jasmine-core": "^3.1.0",
     "jest": "^23.1.0",
-    "karma": "^2.0.3",
+    "karma": "^2.0.4",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.2",
     "nodemon": "^1.17.5",
