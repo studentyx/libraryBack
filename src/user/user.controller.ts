@@ -16,7 +16,7 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Post()
-    async create(@Headers() headers, @Body() userDto: UserDto, ): Promise<User> {
+    async create(@Headers() headers, @Body() userDto: UserDto ): Promise<User> {
         let recaptchaSecretKey: string = '6Lc4AGAUAAAAAGRuqNtoOV1QPZ48PaGwofl9Tizw';
         let recaptchaUrl =  "https://www.google.com/recaptcha/api/siteverify?secret=" 
         + recaptchaSecretKey
