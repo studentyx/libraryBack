@@ -5,7 +5,8 @@ export const UserSchema = new mongoose.Schema({
         type: String
     },
     password: {
-        type: String
+        type: String,
+        select: false,
     },
     email: {
         type: String

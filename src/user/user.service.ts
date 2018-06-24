@@ -49,8 +49,12 @@ export class UserService {
     return await this.userModel.findById(id).exec();
   }
 
-  async findByUsername(username: string): Promise<User> {
-    const user: User = await this.userModel.findOne({ username }).exec();
+  async findByUsername(username: string, selectPassword: boolean): Promise<User> {
+    let query = this.userModel.findOne({ username });
+    if ( selectPassword === true ){
+      query.select( '+password' );
+    }
+    const user: User = await query.exec();
     return user;
   }
 
@@ -58,7 +62,9 @@ export class UserService {
 
     const userDB: User = await this.userModel.findOne({ username }).exec();
     userDto.rol = userDB.rol;
-    userDto.password = await bcrypt.hash( userDto.password, 10 );
+    if (userDto.password) {
+      userDto.password = await bcrypt.hash(userDto.password, 10);
+    }
     const user = new this.userModel(userDB);
     return await user.update(userDto);
 

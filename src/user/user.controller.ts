@@ -16,7 +16,7 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Post()
-    async create(@Headers() headers, @Body() userDto: UserDto, ): Promise<User> {
+    async create(@Headers() headers, @Body() userDto: UserDto ): Promise<User> {
         let recaptchaSecretKey: string = '6Lc4AGAUAAAAAGRuqNtoOV1QPZ48PaGwofl9Tizw';
         let recaptchaUrl =  "https://www.google.com/recaptcha/api/siteverify?secret=" 
         + recaptchaSecretKey
@@ -41,7 +41,7 @@ export class UserController {
 
     @Get(UserController.USERNAME)
     async findOne(@Param() param): Promise<User> {
-        return this.userService.findByUsername(param.username);
+        return this.userService.findByUsername(param.username, false);
     }
 
     @Put(UserController.USERNAME)
