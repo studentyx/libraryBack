@@ -62,7 +62,9 @@ export class UserService {
 
     const userDB: User = await this.userModel.findOne({ username }).exec();
     userDto.rol = userDB.rol;
-    userDto.password = await bcrypt.hash( userDto.password, 10 );
+    if (userDto.password) {
+      userDto.password = await bcrypt.hash(userDto.password, 10);
+    }
     const user = new this.userModel(userDB);
     return await user.update(userDto);
 

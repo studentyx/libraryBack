@@ -11,42 +11,54 @@ import { JwtPayload } from 'common/jwt/JwtPayload.interface';
 
 @Injectable()
 export class ReviewService {
-    constructor( @InjectModel('Review') private readonly reviewModel: Model<Review>, 
-    private readonly userService: UserService, private readonly authService: AuthService) { }
+    constructor( @InjectModel('Review') private readonly reviewModel: Model<Review>,
+        private readonly userService: UserService, private readonly authService: AuthService) { }
 
     async create(reviewDto: ReviewDto, username: string): Promise<Review> {
-        const userDB: User = await this.userService.findByUsername(username);
+        const userDB: User = await this.userService.findByUsername(username, false);
         reviewDto.user = userDB;
         const review = new this.reviewModel(reviewDto);
         return await review.save();
     }
 
     async findAll(query): Promise<Review[]> {
-        return await this.reviewModel.find(query).exec();
+        return await this.reviewModel.find(query).populate('user').populate('book').exec();
     }
 
-    async deleteById(token: string, id: string): Promise<Review> {
+    async findById(id: string): Promise<Review> {
+        return await this.reviewModel.findById(id).populate('user').populate('book').exec();
+    }
 
-        const reviewDB: Review = await this.reviewModel.findById(id).exec()
-        let payload: JwtPayload = this.authService.getPayloadFromToken( token );
+    async reviewByToken(token: string, id: string): Promise<Review> {
+        const reviewDB: Review = await this.findById(id);
+        let payload: JwtPayload = this.authService.getPayloadFromToken(token);
 
-        if ( payload.rol === 'admin' || reviewDB.user.username === payload.username ){
-            const review = new this.reviewModel(reviewDB);
-            return await review.remove();
-        }else{
+        if (payload.rol === 'admin' || reviewDB.user.username === payload.username) {
+            return reviewDB;
+        } else {
             return null;
         }
     }
 
-    async updateReview(token: string, id: string, reviewDto: ReviewDto): Promise<Review> {
-        const reviewDB: Review = await this.reviewModel.findById(id).exec()
-        let payload: JwtPayload = this.authService.getPayloadFromToken( token );
+    async deleteById(token: string, id: string): Promise<Review> {
+        const reviewDB = await this.reviewByToken(token, id);
 
-        if ( payload.rol === 'admin' || reviewDB.user.username === payload.username ){
+        if (reviewDB !== null) {
+            const review = new this.reviewModel(reviewDB);
+            return await review.remove();
+        } else {
+            return reviewDB;
+        }
+    }
+
+    async updateReview(token: string, id: string, reviewDto: ReviewDto): Promise<Review> {
+        const reviewDB = await this.reviewByToken(token, id);
+
+        if (reviewDB !== null) {
             const review = new this.reviewModel(reviewDB);
             return await review.update(reviewDto);
-        }else{
-            return null;
+        } else {
+            return reviewDB;
         }
     }
 }
