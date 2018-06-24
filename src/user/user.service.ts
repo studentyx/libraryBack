@@ -49,8 +49,12 @@ export class UserService {
     return await this.userModel.findById(id).exec();
   }
 
-  async findByUsername(username: string): Promise<User> {
-    const user: User = await this.userModel.findOne({ username }).exec();
+  async findByUsername(username: string, selectPassword: boolean): Promise<User> {
+    let query = this.userModel.findOne({ username });
+    if ( selectPassword === true ){
+      query.select( '+password' );
+    }
+    const user: User = await query.exec();
     return user;
   }
 

@@ -41,7 +41,7 @@ export class UserController {
 
     @Get(UserController.USERNAME)
     async findOne(@Param() param): Promise<User> {
-        return this.userService.findByUsername(param.username);
+        return this.userService.findByUsername(param.username, false);
     }
 
     @Put(UserController.USERNAME)

@@ -15,7 +15,7 @@ export class AuthService {
     async loginUser(username: string, password: string): Promise<any> {
         let token: null;
 
-        const userDocument: User = await this.userService.findByUsername(username);
+        const userDocument: User = await this.userService.findByUsername(username, true);
         if (userDocument) {
             const match = await bcrypt.compare(password, userDocument.password);
             if (userDocument.username === username && match) {
