@@ -3,7 +3,6 @@ import request = require('supertest');
 
 const port: string = '3000';
 const peticion = request.agent('http://localhost:' + port);
-var id = '';
 
 var auth = require('../../auth/test/auth.controller.spec.ts');
 var token = '';
