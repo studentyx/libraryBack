@@ -29,7 +29,7 @@ export class BookService {
 
     async updateBook(id: string, bookDto: BookDto): Promise<Book> {
         const condition = { _id: id };
-        return await this.bookModel.update(condition, bookDto);
+        return await this.bookModel.findOneAndUpdate(condition, bookDto, {new: true}).exec();
     }
 }
 
