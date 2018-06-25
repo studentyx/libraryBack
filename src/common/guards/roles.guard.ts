@@ -5,10 +5,12 @@ import { Reflector } from '@nestjs/core';
 import { AuthService } from 'auth/auth.service';
 import * as jwt from 'jsonwebtoken';
 import { JwtPayload } from 'common/jwt/JwtPayload.interface';
+import { JwtService } from 'common/jwt/jwt.service';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector
+  constructor(private readonly reflector: Reflector,
+    private readonly jwtService: JwtService
   ) { }
   canActivate(
     context: ExecutionContext,
@@ -18,25 +20,12 @@ export class RolesGuard implements CanActivate {
       return true;
     }
     const request = context.switchToHttp().getRequest();
-    let payload: JwtPayload = this.getPayloadFromToken(request.headers.authorization);
+    let payload: JwtPayload = this.jwtService.getPayloadFromToken(request.headers.authorization);
 
+    console.log("Fin Roles Guard");
     return payload && roles.indexOf(payload.rol) !== -1;
 
   }
-
-  getPayloadFromToken(token: string): JwtPayload {
-    let payload: JwtPayload = null;
-    jwt.verify(token, 'libraryProject', (err, decoded) => {
-      if (!err) {
-        payload = jwt.decode(token, 'libraryProject');
-      } else {
-        console.log('Error a la hora de verificar el token en "auth.service.ts".');
-      }
-    });
-    return payload;
-  }
-
-
 
 }
 
