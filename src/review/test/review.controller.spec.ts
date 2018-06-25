@@ -17,7 +17,7 @@ var review = {
     text: 'This is a test review',
 }
 
-describe('Testing Review API\n', function () {
+describe('Testing Review API', function () {
 
     describe('Get token authorization: visitor', function () {
 
@@ -37,6 +37,7 @@ describe('Testing Review API\n', function () {
                 .end((err, res) => {
                     expect(201).to.equal(res.status);
                     expect('fernando').to.equal(res.body.user.username);
+                    expect('This is a test review').to.equal(res.body.text);
                     id = res.body._id;
                     done();
                 });
@@ -50,14 +51,15 @@ describe('Testing Review API\n', function () {
                 });
         });
 
-        review = {
-            text: 'This is a test review (Modified)',
-        }
+        
 
         it('PATCH /reviews/id Expected 200', function (done) {
+            let reviewPatch = {
+                text: 'This is a test review (Modified)',
+            }
             peticion.put('/reviews/' + id)
             .set('Authorization', token)
-            .send(review)
+            .send(reviewPatch)
             .end((err, res) => {
                 expect(200).to.equal(res.status);
                 expect('This is a test review (Modified)').to.equal(res.body.text);

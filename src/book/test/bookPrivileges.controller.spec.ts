@@ -13,9 +13,9 @@ var user = {
     password: 'fernando',
 };
 
-describe('Testing Book API\n', function () {
+describe('Testing Book API', function () {
 
-    describe('Get token authorization: bookManager', function () {
+    describe('Get token authorization: visitor', function () {
 
         it('POST /auth', async function () {
             const authRes = await auth.authResponse(user);

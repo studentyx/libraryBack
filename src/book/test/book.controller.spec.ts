@@ -13,7 +13,7 @@ var user = {
     password: 'diego',
 };
 
-describe('Testing Book API\n', function () {
+describe('Testing Book API', function () {
 
     describe('Get token authorization: bookManager', function () {
 
