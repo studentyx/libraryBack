@@ -3,16 +3,16 @@ import { Review } from './review.interface';
 import { ReviewSchema } from './review.schema';
 import { InjectModel, MongooseModule } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { AuthService } from 'auth/auth.service';
 import { UserService } from "../user/user.service";
 import { User } from "../user/user.interface";
 import { Injectable } from '@nestjs/common';
 import { JwtPayload } from 'common/jwt/JwtPayload.interface';
+import { JwtService } from 'common/jwt/jwt.service';
 
 @Injectable()
 export class ReviewService {
     constructor( @InjectModel('Review') private readonly reviewModel: Model<Review>,
-        private readonly userService: UserService, private readonly authService: AuthService) { }
+        private readonly userService: UserService, private readonly jwtService: JwtService) { }
 
     async create(reviewDto: ReviewDto, username: string): Promise<Review> {
         const userDB: User = await this.userService.findByUsername(username, false);
@@ -30,22 +30,24 @@ export class ReviewService {
     }
 
     async reviewByToken(token: string, id: string): Promise<Review> {
+        let returnValue = null;
         const reviewDB: Review = await this.findById(id);
-        let payload: JwtPayload = this.authService.getPayloadFromToken(token);
 
-        if (payload.rol === 'admin' || reviewDB.user.username === payload.username) {
-            return reviewDB;
-        } else {
-            return null;
+        if (reviewDB !== null ) {
+            let payload: JwtPayload = this.jwtService.getPayloadFromToken(token);
+            if (payload.rol === 'admin' || reviewDB.user.username === payload.username) {
+                returnValue = reviewDB;
+            }
         }
+
+        return returnValue;
     }
 
     async deleteById(token: string, id: string): Promise<Review> {
         const reviewDB = await this.reviewByToken(token, id);
-
         if (reviewDB !== null) {
-            const review = new this.reviewModel(reviewDB);
-            return await review.remove();
+            const condition = { _id: id };
+            return await this.reviewModel.findOneAndRemove(condition).populate('user').populate('book').exec();
         } else {
             return reviewDB;
         }
@@ -53,10 +55,9 @@ export class ReviewService {
 
     async updateReview(token: string, id: string, reviewDto: ReviewDto): Promise<Review> {
         const reviewDB = await this.reviewByToken(token, id);
-
         if (reviewDB !== null) {
-            const review = new this.reviewModel(reviewDB);
-            return await review.update(reviewDto);
+            const condition = { _id: id };
+            return await this.reviewModel.findOneAndUpdate(condition, reviewDto, { new: true }).populate('user').populate('book').exec();
         } else {
             return reviewDB;
         }
