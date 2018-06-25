@@ -1,43 +1,59 @@
+
 import { expect } from 'chai';
 import request = require('supertest');
 
 const port: string = '3000';
 const peticion = request.agent('http://localhost:' + port);
-var usernameTest = '';
 
-describe('Testing User Controller POST /users method', function () {
+var auth = require('../../auth/test/auth.controller.spec.ts');
+var token = '';
+var id = '';
 
-    var user = {
-        username: 'testUser',
-        password: 'testUser',
-        email: 'testUser@library.es',
-        avatar: 'http://diasindia.com/wp-content/uploads/2016/11/admin.png',
-        rol: 'visitor',
-    };
+var user = {
+    username: 'diego',
+    password: 'diego',
+};
 
-    it('POST /users', function (done) {
-        peticion.post('/users')
-            .send(user)
-            .end((err, res) => {
-                console.log( res );
-                expect(201).to.equal(res.status);
-                expect('testUser@library.es').to.equal(res.body.email);
-                usernameTest = res.body.username;
-                done();
-            });
+describe('Testing User API', function () {
+
+    describe('Get token authorization', function () {
+
+        it('POST /auth', async function () {
+            const authRes = await auth.authResponse(user);
+            expect(201).to.equal(authRes.status);
+            token = authRes.body.token;
+        });
+    });
+
+    describe('User API Methods', function () {
+
+        it('GET /users/id', function (done) {
+            peticion.get('/users/' + user.username)
+                .end((err, res) => {
+                    expect(200).to.equal(res.status);
+                    expect('diego@library.es').to.equal(res.body.email);
+                    done();
+                });
+        });
+
+        it('PATCH /users', function (done) {
+
+            let update = {
+                email: 'diego@test.es',
+            }
+
+            peticion.put('/users/' + user.username)
+                .set('Authorization', token)
+                .send(update)
+                .end((err, res) => {
+                    expect(200).to.equal(res.status);
+                    expect('diego@test.es').to.equal(res.body.email);
+                    done();
+                });
+        });
 
     });
+
 });
 
-describe('Testing User Controller GET /users method', () => {
-
-    it('GET /users', (done) => {
-        peticion.get('/users')
-            .end((err, res) => {
-                expect(200).to.equal(res.status);
-                expect('testUser').to.equal(res.body[res.body.length - 1].username);
-                done();
-            });
-    });
-});
 

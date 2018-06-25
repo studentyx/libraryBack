@@ -50,7 +50,7 @@ export class UserService {
   }
 
   async findByUsername(username: string, selectPassword: boolean): Promise<User> {
-    let query = this.userModel.findOne({ username });
+    let query = this.userModel.findOne({ username: username });
     if ( selectPassword === true ){
       query.select( '+password' );
     }
@@ -59,16 +59,20 @@ export class UserService {
   }
 
   async updateUser(token: string, username: string, userDto: UserDto): Promise<User> {
+    let user: User = null;
 
     const userDB: User = await this.userModel.findOne({ username }).exec();
-    userDto.rol = userDB.rol;
-    if (userDto.password) {
-      userDto.password = await bcrypt.hash(userDto.password, 10);
+    if ( userDB !== null ){
+      userDto.username = userDB.username;
+      userDto.rol = userDB.rol;
+      if (userDto.password) {
+        userDto.password = await bcrypt.hash(userDto.password, 10);
+      }
+      const condition = { username: username };
+      user = await this.userModel.findOneAndUpdate(condition, userDto, { new: true }).exec();
     }
-    const user = new this.userModel(userDB);
-    return await user.update(userDto);
-
-
+    return user;
+    
   }
 
 
