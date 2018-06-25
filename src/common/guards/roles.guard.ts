@@ -21,8 +21,6 @@ export class RolesGuard implements CanActivate {
     }
     const request = context.switchToHttp().getRequest();
     let payload: JwtPayload = this.jwtService.getPayloadFromToken(request.headers.authorization);
-
-    console.log("Fin Roles Guard");
     return payload && roles.indexOf(payload.rol) !== -1;
 
   }

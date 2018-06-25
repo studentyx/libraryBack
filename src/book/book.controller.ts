@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Patch, Put, Headers, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch, Put, Headers, Query, UseGuards, HttpStatus, HttpException } from '@nestjs/common';
 import { BookDto } from './book.dto';
 import { Book } from './book.interface';
 import { BookService } from './book.service';
@@ -24,20 +24,32 @@ export class BookController {
     }
 
     @Get(BookController.ID)
-    async findOne( @Param() param) {
-        return this.bookService.findById(param.id);
+    async findOne( @Param() param): Promise <Book> {
+        const book = await this.bookService.findById(param.id);
+        if ( book === null ){
+            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+        }
+        return book;
     }
 
     @Delete(BookController.ID)
     @Roles('bookManager', 'admin')
-    async delete( @Param() param) {
-        return this.bookService.deleteById(param.id);
+    async delete( @Param() param): Promise <Book> {
+        const book = await this.bookService.deleteById(param.id);
+        if ( book === null ){
+            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+        }
+        return book;
     }
 
     @Put(BookController.ID)
     @Roles('visitor', 'bookManager', 'admin')
     async updateBook( @Param() param, @Body() bookDto: BookDto): Promise<Book> {
-        return this.bookService.updateBook(param.id, bookDto);
+        const book = await this.bookService.updateBook(param.id, bookDto);
+        if ( book === null ){
+            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+        }
+        return book;
     }
 
 }

@@ -18,18 +18,18 @@ export class BookService {
         return await this.bookModel.find(query).exec();
     }
 
-    async findById(id: string): Promise<Book[]> {
+    async findById(id: string): Promise<Book> {
         return await this.bookModel.findById(id).exec();
     }
 
-    async deleteById(id: string) {
+    async deleteById(id: string): Promise<Book> {
         const condition = { _id: id };
-        return await this.bookModel.remove(condition);
+        return await this.bookModel.findOneAndRemove( condition ).exec();
     }
 
     async updateBook(id: string, bookDto: BookDto): Promise<Book> {
         const condition = { _id: id };
-        return await this.bookModel.update(condition, bookDto);
+        return await this.bookModel.findOneAndUpdate(condition, bookDto, {new: true}).exec();
     }
 }
 
