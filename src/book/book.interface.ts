@@ -6,5 +6,5 @@ export interface Book extends Document {
     readonly description: string;
     readonly genre: string[];
     readonly tags: string[];
-    readonly author: string;
+    readonly author: string[];
 }

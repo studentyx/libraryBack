@@ -20,7 +20,6 @@ export const BookSchema = new mongoose.Schema({
         type: [String]
     },
     author: {
-        type: String,
-        default: '',
+        type: [String]
     },
 });
