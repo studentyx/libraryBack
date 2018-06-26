@@ -2,13 +2,16 @@ import * as mongoose from 'mongoose';
 
 export const BookSchema = new mongoose.Schema({
     title: {
-        type: String
+        type: String,
+        default: '',
     },
     image: {
-        type: String
+        type: String,
+        default: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/600px-No_image_available.svg.png',
     },
     description: {
-        type: String
+        type: String,
+        default: '',
     },
     genre: {
         type: [String]
@@ -17,6 +20,7 @@ export const BookSchema = new mongoose.Schema({
         type: [String]
     },
     author: {
-        type: String
+        type: String,
+        default: '',
     },
 });
