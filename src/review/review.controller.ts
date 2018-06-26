@@ -20,7 +20,11 @@ export class ReviewController {
         const token: string = headers.authorization;
         const username: string = await this.jwtService.getPayloadFromToken(token).username;
         if (username) {
-            return this.reviewService.create(reviewDto, username);
+            const review: Review = await this.reviewService.create(reviewDto, username);
+            if ( review == null ){
+                throw new HttpException('A review by that user already exists', HttpStatus.CONFLICT);
+            }
+            return review;
         } else {
             return null;
         }

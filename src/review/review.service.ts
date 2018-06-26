@@ -17,8 +17,15 @@ export class ReviewService {
     async create(reviewDto: ReviewDto, username: string): Promise<Review> {
         const userDB: User = await this.userService.findByUsername(username, false);
         reviewDto.user = userDB;
-        const review = new this.reviewModel(reviewDto);
-        return await review.save();
+        const findQuery = { user: userDB, book: reviewDto.book }
+        const userBookReviews: Review[] = await this.findAll( findQuery );
+        
+        if ( userBookReviews.length > 0 ){
+            return null;
+        }else{
+            const review = new this.reviewModel(reviewDto);
+            return await review.save();
+        }  
     }
 
     async findAll(query): Promise<Review[]> {
