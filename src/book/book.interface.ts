@@ -7,5 +7,4 @@ export interface Book extends Document {
     readonly genre: string[];
     readonly tags: string[];
     readonly author: string;
-    readonly rating: number;
 }

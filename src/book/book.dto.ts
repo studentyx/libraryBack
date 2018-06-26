@@ -5,5 +5,4 @@ export class BookDto {
     readonly genre: string[];
     readonly tags: string[];
     readonly author: string;
-    readonly rating: number;
 }

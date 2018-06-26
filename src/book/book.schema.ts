@@ -19,7 +19,4 @@ export const BookSchema = new mongoose.Schema({
     author: {
         type: String
     },
-    rating: {
-        type: Number
-    },
 });
