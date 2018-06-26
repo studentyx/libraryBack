@@ -22,7 +22,7 @@ export class ReviewService {
     }
 
     async findAll(query): Promise<Review[]> {
-        return await this.reviewModel.find(query).populate('user').populate('book').exec();
+        return await this.reviewModel.find(query).sort('-date').populate('user').populate('book').exec();
     }
 
     async findById(id: string): Promise<Review> {
