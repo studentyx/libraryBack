@@ -31,7 +31,7 @@ describe('Testing User API', function () {
             peticion.get('/users/' + user.username)
                 .end((err, res) => {
                     expect(200).to.equal(res.status);
-                    expect('diego@library.es').to.equal(res.body.email);
+                    expect('diego').to.equal(res.body.username);
                     done();
                 });
         });
@@ -39,7 +39,7 @@ describe('Testing User API', function () {
         it('PATCH /users', function (done) {
 
             let update = {
-                email: 'diego@test.es',
+                email: 'diego@library.es',
             }
 
             peticion.patch('/users/' + user.username)
@@ -47,9 +47,10 @@ describe('Testing User API', function () {
                 .send(update)
                 .end((err, res) => {
                     expect(200).to.equal(res.status);
-                    expect('diego@test.es').to.equal(res.body.email);
+                    expect('diego@library.es').to.equal(res.body.email);
                     done();
                 });
+
         });
 
     });
