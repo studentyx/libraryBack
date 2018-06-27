@@ -4,6 +4,5 @@ export class BookDto {
     readonly description: string;
     readonly genre: string[];
     readonly tags: string[];
-    readonly author: string;
-    readonly rating: number;
+    readonly author: string[];
 }

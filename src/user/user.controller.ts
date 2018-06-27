@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, UseGuards, Headers, HttpStatus, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Headers, HttpStatus, HttpException, Patch } from '@nestjs/common';
 import { UserDto } from './user.dto';
 import { UserService } from './user.service';
 import { User } from './user.interface';
@@ -46,7 +46,7 @@ export class UserController {
         return this.userService.findByUsername(param.username, false);
     }
 
-    @Put(UserController.USERNAME)
+    @Patch(UserController.USERNAME)
     @Roles('visitor', 'bookManager', 'admin')
     async updateUser(@Headers() headers, @Param() param, @Body() userDto: UserDto): Promise<User> {
         const token: string = headers.authorization;

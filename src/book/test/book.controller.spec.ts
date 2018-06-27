@@ -81,7 +81,7 @@ describe('Testing Book API', function () {
 
         it('PATCH /books', function (done) {
 
-            peticion.put('/books/' + id)
+            peticion.patch('/books/' + id)
                 .set('Authorization', token)
                 .send(book)
                 .end((err, res) => {
@@ -147,7 +147,7 @@ describe('Testing Book API', function () {
 
         it('PATCH /books Id not found. Response 404', function (done) {
 
-            peticion.put('/books/' + id)
+            peticion.patch('/books/' + id)
                 .set('Authorization', token)
                 .send(book)
                 .end((err, res) => {

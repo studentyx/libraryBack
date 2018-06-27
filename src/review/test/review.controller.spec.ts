@@ -57,7 +57,7 @@ describe('Testing Review API', function () {
             let reviewPatch = {
                 text: 'This is a test review (Modified)',
             }
-            peticion.put('/reviews/' + id)
+            peticion.patch('/reviews/' + id)
             .set('Authorization', token)
             .send(reviewPatch)
             .end((err, res) => {
@@ -68,7 +68,7 @@ describe('Testing Review API', function () {
         });
 
         it('PATCH /reviews/id Forbidden Resource', function (done) {
-            peticion.put('/reviews/' + id)
+            peticion.patch('/reviews/' + id)
             .send(review)
             .end((err, res) => {
                 expect(403).to.equal(res.status);
@@ -87,7 +87,7 @@ describe('Testing Review API', function () {
         });
 
         it('PATCH /reviews/id Not found', function (done) {
-            peticion.put('/reviews/' + id)
+            peticion.patch('/reviews/' + id)
             .set('Authorization', token)
             .send(review)
             .end((err, res) => {

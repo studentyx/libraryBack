@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Patch, Put, Headers, Query, UseGuards, HttpStatus, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch, Headers, Query, UseGuards, HttpStatus, HttpException } from '@nestjs/common';
 import { BookDto } from './book.dto';
 import { Book } from './book.interface';
 import { BookService } from './book.service';
@@ -42,7 +42,7 @@ export class BookController {
         return book;
     }
 
-    @Put(BookController.ID)
+    @Patch(BookController.ID)
     @Roles('visitor', 'bookManager', 'admin')
     async updateBook( @Param() param, @Body() bookDto: BookDto): Promise<Book> {
         const book = await this.bookService.updateBook(param.id, bookDto);

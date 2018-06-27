@@ -42,7 +42,7 @@ describe('Testing User API', function () {
                 email: 'diego@test.es',
             }
 
-            peticion.put('/users/' + user.username)
+            peticion.patch('/users/' + user.username)
                 .set('Authorization', token)
                 .send(update)
                 .end((err, res) => {

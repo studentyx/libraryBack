@@ -5,4 +5,5 @@ export class ReviewDto {
     user?: User;
     readonly book: Book;
     readonly text: string;
+    readonly date: Date;
 }

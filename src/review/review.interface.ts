@@ -6,4 +6,5 @@ export interface Review extends Document {
     readonly user: User;
     readonly book: Book;
     readonly text: string;
+    readonly date: Date;
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Patch, Put, Headers, Query, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch, Headers, Query, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
 import { ReviewDto } from './review.dto';
 import { Review } from './review.interface';
 import { ReviewService } from './review.service';
@@ -20,7 +20,11 @@ export class ReviewController {
         const token: string = headers.authorization;
         const username: string = await this.jwtService.getPayloadFromToken(token).username;
         if (username) {
-            return this.reviewService.create(reviewDto, username);
+            const review: Review = await this.reviewService.create(reviewDto, username);
+            if ( review == null ){
+                throw new HttpException('A review by that user already exists', HttpStatus.CONFLICT);
+            }
+            return review;
         } else {
             return null;
         }
@@ -43,7 +47,7 @@ export class ReviewController {
     }
 
 
-    @Put(ReviewController.ID)
+    @Patch(ReviewController.ID)
     @Roles('visitor', 'bookManager', 'admin')
     async updateBook( @Headers() headers, @Param() param, @Body() reviewDto: ReviewDto): Promise<Review> {
         const token: string = headers.authorization;
