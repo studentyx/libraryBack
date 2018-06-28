@@ -35,12 +35,6 @@ export class UserController {
         return null;
     }
 
-    @Get()
-    @Roles('admin')
-    async findAll(): Promise<User[]> {
-        return this.userService.findAll();
-    }
-
     @Get(UserController.USERNAME)
     async findOne(@Param() param): Promise<User> {
         return this.userService.findByUsername(param.username, false);
