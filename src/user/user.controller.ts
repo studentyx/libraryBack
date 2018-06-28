@@ -37,7 +37,11 @@ export class UserController {
 
     @Get(UserController.USERNAME)
     async findOne(@Param() param): Promise<User> {
-        return this.userService.findByUsername(param.username, false);
+        const user: User = await this.userService.findByUsername(param.username, false);
+        if ( user === null ){
+            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+        }
+        return user;
     }
 
     @Patch(UserController.USERNAME)
