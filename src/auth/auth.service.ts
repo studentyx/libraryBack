@@ -12,7 +12,7 @@ export class AuthService {
     constructor(private readonly userService: UserService, private readonly jwtService: JwtService) { }
 
     async loginUser(username: string, password: string): Promise<any> {
-        let token: null;
+        let token: string = null;
         const userDocument: User = await this.userService.findByUsername(username, true);
         if (userDocument) {
             const match = await bcrypt.compare(password, userDocument.password);
