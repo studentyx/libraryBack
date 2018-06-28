@@ -37,7 +37,6 @@
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.2.1",
-    "sql-injection": "0.0.6",
     "typescript": "^2.9.2"
   },
   "devDependencies": {
