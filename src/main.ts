@@ -4,6 +4,7 @@ import cors = require('cors');
 import helmet = require( 'helmet' );
 import bodyParser = require( 'body-parser');
 import filter = require( 'content-filter' );
+import protect = require('@risingstack/protect')
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +13,14 @@ async function bootstrap() {
 
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended:true}));
+
+  app.use(protect.express.sqlInjection({
+    loggerFunction: console.error
+  }))
+   
+  app.use(protect.express.xss({
+    loggerFunction: console.error
+  }))
 
   let blackList = ['$','{','&&','||'];
   let options = {
