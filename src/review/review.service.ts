@@ -8,8 +8,6 @@ import { User } from "../user/user.interface";
 import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { JwtPayload } from 'common/jwt/JwtPayload.interface';
 import { JwtService } from 'common/jwt/jwt.service';
-import * as mongoose from 'mongoose';
-
 
 @Injectable()
 export class ReviewService {
@@ -30,13 +28,6 @@ export class ReviewService {
     }
 
     async findAll(bookId: string, userId: string): Promise<Review[]> {
-        if (mongoose.Types.ObjectId.isValid(bookId) === false) {
-            throw new HttpException('The book parameter is not valid', HttpStatus.BAD_REQUEST);
-        }
-        if (userId !== undefined && mongoose.Types.ObjectId.isValid(bookId) === false) {
-            throw new HttpException('The user parameter is not valid', HttpStatus.BAD_REQUEST);
-        }
-
         let condition = {};
         if (userId !== undefined) {
             condition = { book: bookId, user: userId };
@@ -51,11 +42,6 @@ export class ReviewService {
     }
 
     async reviewByToken(token: string, id: string): Promise<Review> {
-
-        if (mongoose.Types.ObjectId.isValid(id) === false) {
-            throw new HttpException('The review id is not valid', HttpStatus.BAD_REQUEST);
-        }
-
         let returnValue = null;
         const reviewDB: Review = await this.findById(id);
 
@@ -65,7 +51,6 @@ export class ReviewService {
                 returnValue = reviewDB;
             }
         }
-
         return returnValue;
     }
 
