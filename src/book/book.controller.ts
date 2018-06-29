@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Param, Delete, Patch, Headers, Query, UseGuards, HttpStatus, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch, Headers, Query, UseGuards, HttpStatus, HttpException, UsePipes } from '@nestjs/common';
 import { BookDto } from './book.dto';
 import { Book } from './book.interface';
 import { BookService } from './book.service';
 import { RolesGuard } from 'common/guards/roles.guard';
 import { Roles } from 'common/decorators/roles.decorator';
+import { BookPipe } from 'common/pipes/book.pipe';
 
 @Controller(BookController.URL)
 @UseGuards(RolesGuard)
@@ -14,7 +15,7 @@ export class BookController {
 
     @Post()
     @Roles('bookManager', 'admin')
-    async create( @Headers() headers, @Body() bookDto: BookDto): Promise<Book> {
+    async create( @Headers() headers, @Body(new BookPipe()) bookDto: BookDto): Promise<Book> {
         return this.bookService.create(bookDto);
     }
 
@@ -44,7 +45,7 @@ export class BookController {
 
     @Patch(BookController.ID)
     @Roles('visitor', 'bookManager', 'admin')
-    async updateBook( @Param() param, @Body() bookDto: BookDto): Promise<Book> {
+    async updateBook( @Param() param, @Body(new BookPipe()) bookDto: BookDto): Promise<Book> {
         const book = await this.bookService.updateBook(param.id, bookDto);
         if ( book === null ){
             throw new HttpException('Not found', HttpStatus.NOT_FOUND);

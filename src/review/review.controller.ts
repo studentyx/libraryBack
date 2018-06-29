@@ -5,6 +5,7 @@ import { ReviewService } from './review.service';
 import { RolesGuard } from 'common/guards/roles.guard';
 import { Roles } from 'common/decorators/roles.decorator';
 import { JwtService } from 'common/jwt/jwt.service';
+import { ReviewPipe } from 'common/pipes/review.pipe';
 
 @Controller(ReviewController.URL)
 @UseGuards(RolesGuard)
@@ -16,7 +17,7 @@ export class ReviewController {
     
     @Post()
     @Roles('visitor', 'bookManager', 'admin')
-    async create(@Headers() headers, @Body() reviewDto: ReviewDto): Promise<Review> {
+    async create(@Headers() headers, @Body(new ReviewPipe()) reviewDto: ReviewDto): Promise<Review> {
         const token: string = headers.authorization;
         const username: string = await this.jwtService.getPayloadFromToken(token).username;
         if (username) {
@@ -32,7 +33,7 @@ export class ReviewController {
 
     @Get()
     async findAll( @Query() query ): Promise<Review[]> {
-        return this.reviewService.findAll(query);
+        return this.reviewService.findAll(query.book, undefined);
     }
 
     @Delete(ReviewController.ID)
@@ -49,7 +50,7 @@ export class ReviewController {
 
     @Patch(ReviewController.ID)
     @Roles('visitor', 'bookManager', 'admin')
-    async updateBook( @Headers() headers, @Param() param, @Body() reviewDto: ReviewDto): Promise<Review> {
+    async updateBook( @Headers() headers, @Param() param, @Body(new ReviewPipe()) reviewDto: ReviewDto): Promise<Review> {
         const token: string = headers.authorization;
         const review = await this.reviewService.updateReview(token, param.id, reviewDto);
         if ( review === null ){
