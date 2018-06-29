@@ -19,7 +19,7 @@ export class ReviewService {
     async create(reviewDto: ReviewDto, username: string): Promise<Review> {
         const userDB: User = await this.userService.findByUsername(username, false);
         reviewDto.user = userDB;
-        const userBookReviews: Review[] = await this.findAll(reviewDto.book._id, username);
+        const userBookReviews: Review[] = await this.findAll(reviewDto.book._id, userDB._id);
 
         if (userBookReviews.length > 0) {
             return null;
@@ -29,13 +29,17 @@ export class ReviewService {
         }
     }
 
-    async findAll(bookId: string, username: string): Promise<Review[]> {
+    async findAll(bookId: string, userId: string): Promise<Review[]> {
         if (mongoose.Types.ObjectId.isValid(bookId) === false) {
             throw new HttpException('The book parameter is not valid', HttpStatus.BAD_REQUEST);
         }
+        if (userId !== undefined && mongoose.Types.ObjectId.isValid(bookId) === false) {
+            throw new HttpException('The user parameter is not valid', HttpStatus.BAD_REQUEST);
+        }
+
         let condition = {};
-        if (username !== undefined) {
-            condition = { book: bookId, user: username };
+        if (userId !== undefined) {
+            condition = { book: bookId, user: userId };
         } else {
             condition = { book: bookId };
         }
@@ -47,6 +51,11 @@ export class ReviewService {
     }
 
     async reviewByToken(token: string, id: string): Promise<Review> {
+
+        if (mongoose.Types.ObjectId.isValid(id) === false) {
+            throw new HttpException('The review id is not valid', HttpStatus.BAD_REQUEST);
+        }
+
         let returnValue = null;
         const reviewDB: Review = await this.findById(id);
 
@@ -63,7 +72,7 @@ export class ReviewService {
     async deleteById(token: string, id: string): Promise<Review> {
         const reviewDB = await this.reviewByToken(token, id);
         if (reviewDB !== null) {
-            const condition = { _id: id };
+            const condition = { _id: 'pepito' };
             return await this.reviewModel.findOneAndRemove(condition).populate('user').populate('book').exec();
         } else {
             return reviewDB;
