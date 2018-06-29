@@ -1,8 +1,23 @@
+import { IsString, IsOptional, IsArray } from "class-validator";
+
 export class BookDto {
-    readonly title: string;
-    readonly image: string;
-    readonly description: string;
-    readonly genre: string[];
-    readonly tags: string[];
-    readonly author: string[];
+
+    @IsOptional()
+    @IsString()
+    title: string;
+    @IsOptional()
+    @IsString()
+    image: string;
+    @IsOptional()
+    @IsString()
+    description: string;
+    @IsOptional()
+    @IsArray()
+    genre: string[];
+    @IsOptional()
+    @IsArray()
+    tags: string[];
+    @IsOptional()
+    @IsArray()
+    author: string[];
 }

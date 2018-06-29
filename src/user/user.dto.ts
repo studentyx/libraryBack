@@ -1,7 +1,20 @@
+import { IsString, IsOptional, IsEmail, MinLength } from 'class-validator';
+
 export class UserDto {
-    username: string;
-    password: string;
-    readonly email?: string;
-    readonly avatar?: string;
-    rol: string;
-  }
+
+  @IsOptional()
+  @IsString()
+  username: string;
+  @IsOptional()
+  @IsString()
+  password: string;
+  @IsOptional()
+  @IsString()
+  email?: string;
+  @IsOptional()
+  @IsString()
+  avatar?: string;
+  @IsOptional()
+  @IsString()
+  rol: string;
+}
