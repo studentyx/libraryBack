@@ -11,13 +11,18 @@ export class BookPipe implements PipeTransform<any> {
             value.image = htmlspecialchars(value.image);
             value.description = htmlspecialchars(value.description);
 
-            for (let i = 0; i < value.genre.length; i++) {
-                value.genre[i] = htmlspecialchars(value.genre[i]);
+            if ( value.genre ){
+                for (let i = 0; i < value.genre.length; i++) {
+                    value.genre[i] = htmlspecialchars(value.genre[i]);
+                }
             }
 
-            for (let i = 0; i < value.tags.length; i++) {
-                value.tags[i] = htmlspecialchars(value.tags[i]);
+            if ( value.tags ){
+                for (let i = 0; i < value.tags.length; i++) {
+                    value.tags[i] = htmlspecialchars(value.tags[i]);
+                }
             }
+
         } else {
             console.log("Bad Request Exception BOOK PIPE");
             throw new BadRequestException('Incorrect data type');
