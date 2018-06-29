@@ -72,7 +72,7 @@ export class ReviewService {
     async deleteById(token: string, id: string): Promise<Review> {
         const reviewDB = await this.reviewByToken(token, id);
         if (reviewDB !== null) {
-            const condition = { _id: 'pepito' };
+            const condition = { _id: id };
             return await this.reviewModel.findOneAndRemove(condition).populate('user').populate('book').exec();
         } else {
             return reviewDB;
