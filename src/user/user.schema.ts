@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 export const UserSchema = new mongoose.Schema({
     username: {
@@ -23,4 +24,12 @@ export const UserSchema = new mongoose.Schema({
         default: 'visitor',
     },
 });
+
+UserSchema.pre('find', function (next) {
+    if (mongoose.Types.ObjectId.isValid(UserSchema._id) === false) {
+        throw new HttpException('The id is not valid', HttpStatus.BAD_REQUEST);
+    }
+    next();
+});
+
 
