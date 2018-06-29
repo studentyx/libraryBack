@@ -5,9 +5,11 @@ import { InjectModel, MongooseModule } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserService } from "../user/user.service";
 import { User } from "../user/user.interface";
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { JwtPayload } from 'common/jwt/JwtPayload.interface';
 import { JwtService } from 'common/jwt/jwt.service';
+import * as mongoose from 'mongoose';
+
 
 @Injectable()
 export class ReviewService {
@@ -17,19 +19,27 @@ export class ReviewService {
     async create(reviewDto: ReviewDto, username: string): Promise<Review> {
         const userDB: User = await this.userService.findByUsername(username, false);
         reviewDto.user = userDB;
-        const findQuery = { user: userDB, book: reviewDto.book }
-        const userBookReviews: Review[] = await this.findAll( findQuery );
-        
-        if ( userBookReviews.length > 0 ){
+        const userBookReviews: Review[] = await this.findAll(reviewDto.book._id, username);
+
+        if (userBookReviews.length > 0) {
             return null;
-        }else{
+        } else {
             const review = new this.reviewModel(reviewDto);
             return await review.save();
-        }  
+        }
     }
 
-    async findAll(query): Promise<Review[]> {
-        return await this.reviewModel.find(query).sort('-date').populate('user').populate('book').exec();
+    async findAll(bookId: string, username: string): Promise<Review[]> {
+        if (mongoose.Types.ObjectId.isValid(bookId) === false) {
+            throw new HttpException('The book parameter is not valid', HttpStatus.BAD_REQUEST);
+        }
+        let condition = {};
+        if (username !== undefined) {
+            condition = { book: bookId, user: username };
+        } else {
+            condition = { book: bookId };
+        }
+        return await this.reviewModel.find(condition).sort('-date').populate('user').populate('book').exec();
     }
 
     async findById(id: string): Promise<Review> {
@@ -40,7 +50,7 @@ export class ReviewService {
         let returnValue = null;
         const reviewDB: Review = await this.findById(id);
 
-        if (reviewDB !== null ) {
+        if (reviewDB !== null) {
             let payload: JwtPayload = this.jwtService.getPayloadFromToken(token);
             if (payload.rol === 'admin' || reviewDB.user.username === payload.username) {
                 returnValue = reviewDB;
