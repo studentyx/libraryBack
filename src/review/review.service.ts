@@ -8,6 +8,8 @@ import { User } from "../user/user.interface";
 import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { JwtPayload } from 'common/jwt/JwtPayload.interface';
 import { JwtService } from 'common/jwt/jwt.service';
+import * as mongoose from 'mongoose';
+import { ReviewFindQuery } from 'review/reviewFindQuery';
 
 @Injectable()
 export class ReviewService {
@@ -28,13 +30,12 @@ export class ReviewService {
     }
 
     async findAll(bookId: string, userId: string): Promise<Review[]> {
-        let condition = {};
-        if (userId !== undefined) {
-            condition = { book: bookId, user: userId };
-        } else {
-            condition = { book: bookId };
-        }
-        return await this.reviewModel.find(condition).sort('-date').populate('user').populate('book').exec();
+        let reviewFindQuery: ReviewFindQuery = {
+            user: userId,
+            book: bookId,
+        };
+        Object.keys(reviewFindQuery).forEach(key => !reviewFindQuery[key] && delete reviewFindQuery[key]);
+        return await this.reviewModel.find(reviewFindQuery).sort('-date').populate('user').populate('book').exec();
     }
 
     async findById(id: string): Promise<Review> {

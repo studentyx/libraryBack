@@ -6,6 +6,7 @@ import { RolesGuard } from 'common/guards/roles.guard';
 import { Roles } from 'common/decorators/roles.decorator';
 import { JwtService } from 'common/jwt/jwt.service';
 import { ReviewPipe } from 'common/pipes/review.pipe';
+import { MongoosePipe } from 'common/pipes/mongoose.pipe';
 
 @Controller(ReviewController.URL)
 @UseGuards(RolesGuard)
@@ -38,9 +39,9 @@ export class ReviewController {
 
     @Delete(ReviewController.ID)
     @Roles('visitor', 'bookManager', 'admin')
-    async delete( @Headers() headers, @Param() param ){
+    async delete( @Headers() headers, @Param('id', new MongoosePipe()) id ){
         const token: string = headers.authorization;
-        const review = await this.reviewService.deleteById( token, param.id );
+        const review = await this.reviewService.deleteById( token, id );
         if ( review === null ){
             throw new HttpException('Not found', HttpStatus.NOT_FOUND);
         }
@@ -50,9 +51,9 @@ export class ReviewController {
 
     @Patch(ReviewController.ID)
     @Roles('visitor', 'bookManager', 'admin')
-    async updateBook( @Headers() headers, @Param() param, @Body(new ReviewPipe()) reviewDto: ReviewDto): Promise<Review> {
+    async updateBook( @Headers() headers, @Param('id', new MongoosePipe()) id, @Body(new ReviewPipe()) reviewDto: ReviewDto): Promise<Review> {
         const token: string = headers.authorization;
-        const review = await this.reviewService.updateReview(token, param.id, reviewDto);
+        const review = await this.reviewService.updateReview(token, id, reviewDto);
         if ( review === null ){
             throw new HttpException('Not found', HttpStatus.NOT_FOUND);
         }
