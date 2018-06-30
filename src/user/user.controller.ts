@@ -1,13 +1,13 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Headers, HttpStatus, HttpException, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Headers, HttpStatus, HttpException, Patch, UsePipes } from '@nestjs/common';
 import { UserDto } from './user.dto';
 import { UserService } from './user.service';
 import { User } from './user.interface';
 import { RolesGuard } from 'common/guards/roles.guard';
 import { Roles } from 'common/decorators/roles.decorator';
-
 import request = require('supertest');
 import { JwtService } from 'common/jwt/jwt.service';
 import { JwtPayload } from 'common/jwt/JwtPayload.interface';
+import { UserPipe } from 'common/pipes/user.pipe';
 
 @Controller(UserController.URL)
 @UseGuards(RolesGuard)
@@ -18,7 +18,7 @@ export class UserController {
     constructor(private readonly userService: UserService, private readonly jwtService: JwtService) {}
 
     @Post()
-    async create(@Headers() headers, @Body() userDto: UserDto ): Promise<User> {
+    async create(@Headers() headers, @Body(new UserPipe()) userDto: UserDto ): Promise<User> {
         let recaptchaSecretKey: string = '6Lc4AGAUAAAAAGRuqNtoOV1QPZ48PaGwofl9Tizw';
         let recaptchaUrl =  "https://www.google.com/recaptcha/api/siteverify?secret=" 
         + recaptchaSecretKey
@@ -46,12 +46,12 @@ export class UserController {
 
     @Patch(UserController.USERNAME)
     @Roles('visitor', 'bookManager', 'admin')
-    async updateUser(@Headers() headers, @Param() param, @Body() userDto: UserDto): Promise<User> {
+    async updateUser(@Headers() headers, @Param() param, @Body(new UserPipe()) userDto: UserDto): Promise<User> {
         const token: string = headers.authorization;
         const payload: JwtPayload = await this.jwtService.getPayloadFromToken(token);
         let user: User = null;
 
-        if ( payload.rol !== 'admin' && payload.username !== param.username ){
+        if ( payload.username !== param.username ){
             throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
         }else{
             user = await this.userService.updateUser(token, param.username, userDto);
