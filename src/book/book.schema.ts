@@ -27,10 +27,3 @@ export const BookSchema = new mongoose.Schema({
         default: [],
     },
 });
-
-BookSchema.pre('find', function (next) {
-    if (mongoose.Types.ObjectId.isValid(BookSchema._id) === false) {
-        throw new HttpException('The id is not valid', HttpStatus.BAD_REQUEST);
-    }
-    next();
-});

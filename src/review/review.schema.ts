@@ -10,10 +10,3 @@ export const ReviewSchema = new mongoose.Schema({
     },  
     date: { type: Date, default: Date.now },
 });
-
-ReviewSchema.pre('find', function (next) {
-    if (mongoose.Types.ObjectId.isValid(ReviewSchema._id) === false) {
-        throw new HttpException('The id is not valid', HttpStatus.BAD_REQUEST);
-    }
-    next();
-});
