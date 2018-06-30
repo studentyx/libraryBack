@@ -13,7 +13,6 @@ export class UserPipe implements PipeTransform<any> {
             value.avatar = sanitizeHtml(value.avatar);
             value.rol = sanitizeHtml(value.rol);
         }else{
-            console.log( "Bad Request Exception USER PIPE" );
             throw new BadRequestException('Incorrect data type');
         }
         return value;

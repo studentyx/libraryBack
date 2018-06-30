@@ -9,7 +9,6 @@ export class ReviewPipe implements PipeTransform<any> {
         if (metatype === ReviewDto) {
             value.text = sanitizeHtml(value.text);
         }else{
-            console.log( "Bad Request Exception REVIEW PIPE" );
             throw new BadRequestException('Incorrect data type');
         }
         return value;

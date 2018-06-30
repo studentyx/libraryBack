@@ -24,7 +24,6 @@ export class BookPipe implements PipeTransform<any> {
             }
 
         } else {
-            console.log("Bad Request Exception BOOK PIPE");
             throw new BadRequestException('Incorrect data type');
         }
         return value;
