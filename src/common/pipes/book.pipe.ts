@@ -1,25 +1,25 @@
 
 import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from '@nestjs/common';
-import htmlspecialchars = require('htmlspecialchars');
 import { BookDto } from 'book/book.dto';
+import sanitizeHtml = require('sanitize-html');
 
 @Injectable()
 export class BookPipe implements PipeTransform<any> {
     async transform(value, { metatype }: ArgumentMetadata) {
         if (metatype === BookDto) {
-            value.title = htmlspecialchars(value.title);
-            value.image = htmlspecialchars(value.image);
-            value.description = htmlspecialchars(value.description);
+            value.title = sanitizeHtml(value.title);
+            value.image = sanitizeHtml(value.image);
+            value.description = sanitizeHtml(value.description);
 
             if ( value.genre ){
                 for (let i = 0; i < value.genre.length; i++) {
-                    value.genre[i] = htmlspecialchars(value.genre[i]);
+                    value.genre[i] = sanitizeHtml(value.genre[i]);
                 }
             }
 
             if ( value.tags ){
                 for (let i = 0; i < value.tags.length; i++) {
-                    value.tags[i] = htmlspecialchars(value.tags[i]);
+                    value.tags[i] = sanitizeHtml(value.tags[i]);
                 }
             }
 
