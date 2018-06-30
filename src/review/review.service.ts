@@ -30,11 +30,17 @@ export class ReviewService {
     }
 
     async findAll(bookId: string, userId: string): Promise<Review[]> {
+
         let reviewFindQuery: ReviewFindQuery = {
             user: userId,
             book: bookId,
         };
         Object.keys(reviewFindQuery).forEach(key => !reviewFindQuery[key] && delete reviewFindQuery[key]);
+        Object.keys(reviewFindQuery).forEach(key => {
+            if (mongoose.Types.ObjectId.isValid(reviewFindQuery[key]) === false) {
+                throw new HttpException('The provided parameter ' + reviewFindQuery[key] + ' is not a valid mongoDB Id', HttpStatus.BAD_REQUEST);
+            }
+        });
         return await this.reviewModel.find(reviewFindQuery).sort('-date').populate('user').populate('book').exec();
     }
 
