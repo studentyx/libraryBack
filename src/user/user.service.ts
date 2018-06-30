@@ -41,14 +41,6 @@ export class UserService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.userModel.find().exec();
-  }
-
-  async findById(id: string): Promise<User> {
-    return await this.userModel.findById(id).exec();
-  }
-
   async findByUsername(username: string, selectPassword: boolean): Promise<User> {
     let query = this.userModel.findOne({ username: username });
     if ( selectPassword === true ){
@@ -72,7 +64,6 @@ export class UserService {
       user = await this.userModel.findOneAndUpdate(condition, userDto, { new: true }).exec();
     }
     return user;
-    
   }
 
 
