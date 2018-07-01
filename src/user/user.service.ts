@@ -5,6 +5,7 @@ import { User } from './user.interface';
 import { UserDto } from './user.dto';
 import { UserSchema } from './user.schema';
 import * as bcrypt from 'bcrypt';
+import request = require('supertest');
 
 @Injectable()
 export class UserService {
@@ -24,10 +25,29 @@ export class UserService {
     return hashedPassword;
   }
 
-  async create(userDto: UserDto): Promise<User> {
-    if ( userDto.password.length < 1 ){
+  async recaptchaVerification(url: string): Promise<any> {
+    return new Promise(function (resolve, reject) {
+      const peticion = request.agent(url);
+      peticion.post('')
+        .end((err, res) => {
+          if (res.body.success === true) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+    });
+  }
+
+  async create(userDto: UserDto, recaptchaUrl: string): Promise<User> {
+    const recaptcha: boolean = await this.recaptchaVerification(recaptchaUrl);
+    if (recaptcha === false) {
+      throw new HttpException('Invalid captcha', HttpStatus.BAD_REQUEST);
+    }
+    if (userDto.password.length < 1) {
       throw new HttpException('The password must have a minimum length of 1', HttpStatus.BAD_REQUEST);
     }
+
     const condition = { username: userDto.username };
     let userCount = await this.userModel.count(condition).exec();
 
@@ -38,7 +58,7 @@ export class UserService {
       const user = new this.userModel(userDto);
       return await user.save();
     } else {
-      return null;
+      throw new HttpException('Username is already taken', HttpStatus.CONFLICT);
     }
   }
 
@@ -59,7 +79,7 @@ export class UserService {
       userDto.username = userDB.username;
       userDto.rol = userDB.rol;
       if (userDto.password) {
-        if ( userDto.password.length < 1 ){
+        if (userDto.password.length < 1) {
           throw new HttpException('The password must have a minimum length of 1', HttpStatus.BAD_REQUEST);
         }
         userDto.password = await bcrypt.hash(userDto.password, 10);
