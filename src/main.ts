@@ -5,12 +5,16 @@ import helmet = require('helmet');
 import bodyParser = require('body-parser');
 import filter = require('content-filter');
 import protect = require('@risingstack/protect');
+import Ddos = require( 'ddos' );
+import express = require( 'express' );
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cors());
   app.use(helmet());
+  let ddos = new Ddos;
+  app.use( ddos.express );
 
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
