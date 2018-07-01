@@ -9,7 +9,7 @@
     "start:dev": "nodemon",
     "prestart:prod": "rm -rf dist && tsc",
     "start:prod": "node dist/main.js",
-    "test": "mocha -r ts-node/register src/**/*.spec.ts",
+    "test": "mocha --timeout 10000 -r ts-node/register src/**/*.spec.ts",
     "test:karma": "karma start"
   },
   "dependencies": {

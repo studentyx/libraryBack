@@ -35,10 +35,18 @@ describe('Testing Book API', function () {
                 });
         });
 
-        it('GET /books', function (done) {
+        it('GET /books/id', function (done) {
             peticion.get('/books/' + id)
                 .end((err, res) => {
                     expect(200).to.equal(res.status);
+                    done();
+                });
+        });
+
+        it('GET /books/id incorrect id', function (done) {
+            peticion.get('/books/incorrect' )
+                .end((err, res) => {
+                    expect(400).to.equal(res.status);
                     done();
                 });
         });
@@ -47,14 +55,12 @@ describe('Testing Book API', function () {
 
     describe('Testing managing books without special privileges', function () {
 
-        var book = {
-            title: 'Harry Potter and the Chamber of Secrets',
-        };
-
         it('POST /books. Expected 403', function (done) {
             peticion.post('/books')
                 .set('Authorization', token)
-                .send(book)
+                .send({
+                    title: 'Harry Potter and the Chamber of Secrets',
+                })
                 .end((err, res) => {
                     expect(403).to.equal(res.status);
                     done();

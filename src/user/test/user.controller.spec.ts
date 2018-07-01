@@ -17,7 +17,6 @@ var user = {
 describe('Testing User API', function () {
 
     describe('Get token authorization', function () {
-
         it('POST /auth', async function () {
             const authRes = await auth.authResponse(user);
             expect(201).to.equal(authRes.status);
@@ -26,7 +25,6 @@ describe('Testing User API', function () {
     });
 
     describe('User API Methods', function () {
-
         it('GET /users/id', function (done) {
             peticion.get('/users/' + user.username)
                 .end((err, res) => {
@@ -37,14 +35,11 @@ describe('Testing User API', function () {
         });
 
         it('PATCH /users', function (done) {
-
-            let update = {
-                email: 'diego@library.es',
-            }
-
             peticion.patch('/users/' + user.username)
                 .set('Authorization', token)
-                .send(update)
+                .send({
+                    email: 'diego@library.es',
+                })
                 .end((err, res) => {
                     expect(200).to.equal(res.status);
                     expect('diego@library.es').to.equal(res.body.email);
