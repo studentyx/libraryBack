@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 export const UserSchema = new mongoose.Schema({
     username: {
@@ -7,8 +8,9 @@ export const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        default: '',
+        default: 'password',
         select: false,
+        minlength: 1,
     },
     email: {
         type: String,
@@ -23,4 +25,6 @@ export const UserSchema = new mongoose.Schema({
         default: 'visitor',
     },
 });
+
+
 

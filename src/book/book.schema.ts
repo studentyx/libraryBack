@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 export const BookSchema = new mongoose.Schema({
     title: {
@@ -14,12 +15,15 @@ export const BookSchema = new mongoose.Schema({
         default: '',
     },
     genre: {
-        type: [String]
+        type: [String],
+        default: [],
     },
     tags: {
-        type: [String]
+        type: [String],
+        default: [],
     },
     author: {
-        type: [String]
+        type: [String],
+        default: [],
     },
 });
