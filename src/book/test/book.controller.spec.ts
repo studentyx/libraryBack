@@ -74,15 +74,13 @@ describe('Testing Book API', function () {
 
     describe('Testing Book Controller PATCH /books method', function () {
 
-        var book = {
-            title: '(Modified) Harry Potter and the Chamber of Secrets',
-        };
-
         it('PATCH /books', function (done) {
 
             peticion.patch('/books/' + id)
                 .set('Authorization', token)
-                .send(book)
+                .send({
+                    title: '(Modified) Harry Potter and the Chamber of Secrets',
+                })
                 .end((err, res) => {
                     expect(200).to.equal(res.status);
                     expect('(Modified) Harry Potter and the Chamber of Secrets').to.equal(res.body.title);
@@ -140,15 +138,13 @@ describe('Testing Book API', function () {
 
     describe('Testing Book Controller PATCH /books method Not Found', function () {
 
-        var book = {
-            title: '(Modified) Harry Potter and the Chamber of Secrets',
-        };
-
         it('PATCH /books Id not found. Response 404', function (done) {
 
             peticion.patch('/books/' + id)
                 .set('Authorization', token)
-                .send(book)
+                .send({
+                    title: '(Modified) Harry Potter and the Chamber of Secrets',
+                })
                 .end((err, res) => {
                     expect(404).to.equal(res.status);
                     done();
