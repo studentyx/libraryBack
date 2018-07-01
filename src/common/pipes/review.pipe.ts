@@ -7,7 +7,9 @@ import sanitizeHtml = require('sanitize-html');
 export class ReviewPipe implements PipeTransform<any> {
     async transform(value, { metatype }: ArgumentMetadata) {
         if (metatype === ReviewDto) {
-            value.text = sanitizeHtml(value.text);
+            if ( value.text ){
+                value.text = sanitizeHtml(value.text);
+            } 
         }else{
             throw new BadRequestException('Incorrect data type');
         }

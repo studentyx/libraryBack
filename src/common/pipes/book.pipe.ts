@@ -7,9 +7,15 @@ import sanitizeHtml = require('sanitize-html');
 export class BookPipe implements PipeTransform<any> {
     async transform(value, { metatype }: ArgumentMetadata) {
         if (metatype === BookDto) {
-            value.title = sanitizeHtml(value.title);
-            value.image = sanitizeHtml(value.image);
-            value.description = sanitizeHtml(value.description);
+            if ( value.title ){
+                value.title = sanitizeHtml(value.title);
+            }
+            if ( value.image ){
+                value.image = sanitizeHtml(value.image);
+            }
+            if ( value.description ){
+                value.description = sanitizeHtml(value.description);
+            }
 
             if ( value.genre ){
                 for (let i = 0; i < value.genre.length; i++) {

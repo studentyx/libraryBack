@@ -7,13 +7,11 @@ import sanitizeHtml = require('sanitize-html');
 export class UserPipe implements PipeTransform<any> {
     async transform(value, { metatype }: ArgumentMetadata) {
         if (metatype === UserDto) {
-            value.username = sanitizeHtml(value.username);
-            if ( value.password ){
-                value.password = sanitizeHtml(value.password);
-            }
-            value.email = sanitizeHtml(value.email);
-            value.avatar = sanitizeHtml(value.avatar);
-            value.rol = sanitizeHtml(value.rol);
+            Object.keys(value).forEach(key => {
+                if ( value[key] ){
+                    value[key] = sanitizeHtml( value[key] );
+                }
+            });
         }else{
             throw new BadRequestException('Incorrect data type');
         }
