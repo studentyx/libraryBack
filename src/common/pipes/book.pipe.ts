@@ -6,7 +6,8 @@ import sanitizeHtml = require('sanitize-html');
 @Injectable()
 export class BookPipe implements PipeTransform<any> {
     async transform(value, { metatype }: ArgumentMetadata) {
-        if (metatype === BookDto) {
+        if (metatype === BookDto) {      
+            delete value['_id'];
             if ( value.title ){
                 value.title = sanitizeHtml(value.title);
             }

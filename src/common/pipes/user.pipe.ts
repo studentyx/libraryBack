@@ -7,6 +7,7 @@ import sanitizeHtml = require('sanitize-html');
 export class UserPipe implements PipeTransform<any> {
     async transform(value, { metatype }: ArgumentMetadata) {
         if (metatype === UserDto) {
+            delete value['_id'];
             Object.keys(value).forEach(key => {
                 if ( value[key] ){
                     value[key] = sanitizeHtml( value[key] );
