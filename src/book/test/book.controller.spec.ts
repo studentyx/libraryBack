@@ -32,8 +32,7 @@ describe('Testing Book API', function () {
             description: "Harry Potter's summer has included the worst birthday ever, doomy warnings from a house-elf called Dobby, and rescue from the Dursleys by his friend Ron Weasley in a magical flying car! Back at Hogwarts School of Witchcraft and Wizardry for his second year, Harry hears strange whispers echo through empty corridors - and then the attacks start. Students are found as though turned to stone . Dobby's sinister predictions seem to be coming true.",
             genre: [],
             tags: [],
-            author: 'J.K. Rowling',
-            rating: '0'
+            author: [ 'J.K. Rowling' ],
         };
 
         it('POST /books', function (done) {

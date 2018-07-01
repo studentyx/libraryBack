@@ -17,10 +17,12 @@ export class ReviewService {
         private readonly userService: UserService, private readonly jwtService: JwtService) { }
 
     async create(reviewDto: ReviewDto, username: string): Promise<Review> {
+        if ( !reviewDto.book ){
+            throw new HttpException( 'Invalid book data for review', HttpStatus.BAD_REQUEST );
+        }
         const userDB: User = await this.userService.findByUsername(username, false);
         reviewDto.user = userDB;
         const userBookReviews: Review[] = await this.findAll(reviewDto.book._id, userDB._id);
-
         if (userBookReviews.length > 0) {
             return null;
         } else {

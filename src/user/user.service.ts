@@ -1,5 +1,5 @@
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.interface';
 import { UserDto } from './user.dto';
@@ -25,6 +25,9 @@ export class UserService {
   }
 
   async create(userDto: UserDto): Promise<User> {
+    if ( userDto.password.length < 1 ){
+      throw new HttpException('The password must have a minimum length of 1', HttpStatus.BAD_REQUEST);
+    }
     const condition = { username: userDto.username };
     let userCount = await this.userModel.count(condition).exec();
 
@@ -56,6 +59,9 @@ export class UserService {
       userDto.username = userDB.username;
       userDto.rol = userDB.rol;
       if (userDto.password) {
+        if ( userDto.password.length < 1 ){
+          throw new HttpException('The password must have a minimum length of 1', HttpStatus.BAD_REQUEST);
+        }
         userDto.password = await bcrypt.hash(userDto.password, 10);
       }
       const condition = { username: username };
