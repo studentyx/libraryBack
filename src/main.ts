@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import cors = require('cors');
 import helmet = require('helmet');
 import bodyParser = require('body-parser');
 import filter = require('content-filter');
@@ -11,7 +10,7 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(cors());
+  app.enableCors();
   app.use(helmet());
   let ddos = new Ddos;
   app.use( ddos.express );
