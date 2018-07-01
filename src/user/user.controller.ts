@@ -4,7 +4,6 @@ import { UserService } from './user.service';
 import { User } from './user.interface';
 import { RolesGuard } from 'common/guards/roles.guard';
 import { Roles } from 'common/decorators/roles.decorator';
-import request = require('supertest');
 import { JwtService } from 'common/jwt/jwt.service';
 import { JwtPayload } from 'common/jwt/JwtPayload.interface';
 import { UserPipe } from 'common/pipes/user.pipe';
@@ -25,22 +24,12 @@ export class UserController {
         + "&response=" 
         + headers.recaptcha;
 
-        const peticion = request.agent(recaptchaUrl);
-        peticion.post('')
-        .end((err, res) => {
-            if ( res.body.success === true ){
-                return this.userService.create(userDto);
-            }
-        });
-        return null;
+        return await this.userService.create( userDto, recaptchaUrl );
     }
 
     @Get(UserController.USERNAME)
     async findOne(@Param() param): Promise<User> {
         const user: User = await this.userService.findByUsername(param.username, false);
-        if ( user === null ){
-            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
-        }
         return user;
     }
 
