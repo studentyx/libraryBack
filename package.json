@@ -28,6 +28,7 @@
     "class-validator": "^0.8.5",
     "content-filter": "^1.1.2",
     "cors": "^2.8.4",
+    "ddos": "^0.1.31",
     "helmet": "^3.12.1",
     "jasmine": "^3.1.0",
     "jsonwebtoken": "^8.3.0",
