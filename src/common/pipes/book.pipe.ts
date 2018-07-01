@@ -29,6 +29,12 @@ export class BookPipe implements PipeTransform<any> {
                 }
             }
 
+            if ( value.author ){
+                for (let i = 0; i < value.author.length; i++) {
+                    value.author[i] = sanitizeHtml(value.author[i]);
+                }
+            }
+
         } else {
             throw new BadRequestException('Incorrect data type');
         }
